@@ -8,5 +8,6 @@ import { LandingComponent } from './pages/landing/landing.component';
 @NgModule({
   declarations: [ListComponent, DetailComponent, ItemComponent, LandingComponent],
   imports: [CommonModule],
+  exports: [LandingComponent],
 })
 export class RecipeModule {}
