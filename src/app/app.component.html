@@ -2,8 +2,10 @@
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <app-landing-recipe *ngIf="feature === 'recipe'"></app-landing-recipe>
-      <app-landing-shopping-list *ngIf="feature === 'shopping-list'"></app-landing-shopping-list>
+      <app-landing-recipe *ngIf="feature === 'recipe'; else shoppingList"></app-landing-recipe>
+      <ng-template #shoppingList>
+        <app-landing-shopping-list></app-landing-shopping-list>
+      </ng-template>
     </div>
   </div>
 </div>
