@@ -1,9 +1,9 @@
-<app-header></app-header>
+<app-header (onNavigation)="handleNavigation($event)"></app-header>
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <app-landing-recipe></app-landing-recipe>
-            <app-landing-shopping-list></app-landing-shopping-list>
-        </div>
+  <div class="row">
+    <div class="col-md-12">
+      <app-landing-recipe *ngIf="feature === 'recipe'"></app-landing-recipe>
+      <app-landing-shopping-list *ngIf="feature === 'shopping-list'"></app-landing-shopping-list>
     </div>
+  </div>
 </div>
