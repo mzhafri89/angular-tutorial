@@ -8,4 +8,8 @@ import { Ingredient } from 'src/app/core/models/ingredient.model';
 })
 export class LandingComponent {
   ingredients: Ingredient[] = [new Ingredient('Apple', 5), new Ingredient('Tomato', 10)];
+
+  handleAddIngredient(ingredient: Ingredient) {
+    this.ingredients.push(ingredient);
+  }
 }
