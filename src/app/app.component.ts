@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'angular-tutorial';
-  feature = 'recipe';
+
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   handleNavigation(feature: string) {
-    this.feature = feature;
+    this.router.navigate([`/${feature}`]);
   }
 }
