@@ -1,9 +1,19 @@
-<a href="#" class="list-group-item clearfix" (click)="handleClick()">
+<a
+  style="cursor: pointer"
+  class="list-group-item clearfix"
+  [routerLink]="index"
+  routerLinkActive="active"
+>
   <div class="pull-left">
     <h4 class="list-group-item-heading">{{ item.name }}</h4>
     <p class="list-group-item-text">{{ item.description }}</p>
   </div>
   <span class="pull-right">
-    <img [src]="item.imageUrl" alt="{{ item.name }}" class="img-responsive" style="max-height: 50px" />
+    <img
+      [src]="item.imageUrl"
+      alt="{{ item.name }}"
+      class="img-responsive"
+      style="max-height: 50px"
+    />
   </span>
 </a>

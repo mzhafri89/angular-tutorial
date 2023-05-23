@@ -1,4 +1,5 @@
-<div *ngIf="!!recipe; else noRecipe">
+<!-- <div *ngIf="!!recipe; else noRecipe"> -->
+<div>
   <div class="row">
     <div class="col-xs-12">
       <img
@@ -28,10 +29,10 @@
             >
           </li>
           <li>
-            <a href="#">Edit Recipe</a>
+            <a (click)="navigateToEditRecipe()">Edit Recipe</a>
           </li>
           <li>
-            <a href="#">Delete Recipe</a>
+            <a>Delete Recipe</a>
           </li>
         </ul>
       </div>
@@ -55,8 +56,8 @@
     </div>
   </div>
 </div>
-<ng-template #noRecipe>
+<!-- <ng-template #noRecipe>
   <div class="row">
     <div class="col-xs-12">No Recipe Selected</div>
   </div>
-</ng-template>
+</ng-template> -->

@@ -9,7 +9,13 @@ import { ShoppingListModule } from './feature/shopping-list/shopping-list.module
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, ShareModule, RecipeModule, ShoppingListModule],
+  imports: [
+    BrowserModule,
+    ShareModule,
+    RecipeModule,
+    ShoppingListModule,
+    AppRoutingModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
