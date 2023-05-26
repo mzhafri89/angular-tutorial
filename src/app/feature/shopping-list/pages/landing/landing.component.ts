@@ -10,11 +10,16 @@ import { ShoppingListService } from '../../services/shopping-list.service';
 })
 export class LandingComponent implements OnInit, OnDestroy {
   ingredients: Ingredient[];
-  private ingredientSubject: Subscription;
+  private addIngredientSubject: Subscription;
+  private editIngredientSubject: Subscription;
 
   constructor(private shoppingListService: ShoppingListService) {
-    this.ingredientSubject = this.shoppingListService
-      .getIngredientSubject()
+    this.addIngredientSubject = this.shoppingListService
+      .getAddIngredientSubject()
+      .subscribe(() => this.fetchIngredients());
+
+    this.editIngredientSubject = this.shoppingListService
+      .getEditIngredientSubject()
       .subscribe(() => this.fetchIngredients());
   }
 
@@ -23,7 +28,8 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.ingredientSubject.unsubscribe();
+    this.addIngredientSubject.unsubscribe();
+    this.editIngredientSubject.unsubscribe();
   }
 
   handleAddIngredient(ingredient: Ingredient) {
@@ -32,5 +38,9 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   fetchIngredients() {
     this.ingredients = this.shoppingListService.getIngredients();
+  }
+
+  selectIngredient(index: number) {
+    this.shoppingListService.editIngredient(index);
   }
 }
