@@ -1,11 +1,26 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  ResolveFn,
+  RouterModule,
+  RouterStateSnapshot,
+  Routes,
+} from '@angular/router';
 import { LandingComponent as RecipeLandingComponent } from './feature/recipe/pages/landing/landing.component';
 import { LandingComponent as ShoppingListLandingComponent } from './feature/shopping-list/pages/landing/landing.component';
 import { DetailComponent as RecipeDetailComponent } from './feature/recipe/components/detail/detail.component';
 import { ErrorComponent } from './share/pages/error/error.component';
 import { StartComponent } from './feature/recipe/components/start/start.component';
 import { EditComponent as RecipeEditComponent } from './feature/recipe/components/edit/edit.component';
+import { RecipesResolverService } from './feature/recipe/services/recipes-resolver.service';
+import { Recipe } from './feature/recipe/models/recipe.model';
+import { DataStoreService } from './share/services/data-store.service';
+
+//probably each data struct service need one for initing pages.
+const recipesResolver: ResolveFn<Recipe[]> = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => inject(DataStoreService).getRecipes();
 
 const routes: Routes = [
   {
@@ -17,11 +32,15 @@ const routes: Routes = [
   {
     path: 'recipes',
     component: RecipeLandingComponent,
+    resolve: { recipes: recipesResolver },
     children: [
       { path: '', component: StartComponent, pathMatch: 'full' },
       //route with static resource should be plced on top of dynamic one
       { path: 'new', component: RecipeEditComponent, data: { mode: 'create' } },
-      { path: ':id', component: RecipeDetailComponent },
+      {
+        path: ':id',
+        component: RecipeDetailComponent,
+      },
       {
         path: ':id/edit',
         component: RecipeEditComponent,
