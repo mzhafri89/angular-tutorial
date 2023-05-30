@@ -13,30 +13,18 @@ export class RecipeService {
   private recipeSubject: Subject<Recipe>;
 
   constructor(private shoppingListService: ShoppingListService) {
-    this.recipes = [
-      new Recipe(
-        'Recipe One',
-        'One',
-        'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&resize=556,505',
-        [
-          new Ingredient('Meat', 1),
-          new Ingredient('Froiz', 2),
-          new Ingredient('Nuts', 2),
-        ]
-      ),
-      new Recipe(
-        'Recipe Two',
-        'Two',
-        'https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chorizo-mozarella-gnocchi-bake-cropped-9ab73a3.jpg?quality=90&resize=556,505',
-        [new Ingredient('Lettuce', 3), new Ingredient('Tomato', 4)]
-      ),
-    ];
-
+    this.recipes = [];
     this.recipeSubject = new Subject<Recipe>();
   }
 
   getRecipes() {
     return [...this.recipes];
+  }
+
+  setRecipes(recipes: Recipe[]) {
+    this.recipes = recipes;
+    //this is hack to tell al sub recipes is updated
+    this.recipeSubject.next(recipes[0]);
   }
 
   getRecipe(index: number) {
