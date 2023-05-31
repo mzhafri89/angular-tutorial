@@ -12,15 +12,13 @@ import { DetailComponent as RecipeDetailComponent } from './feature/recipe/compo
 import { ErrorComponent } from './share/pages/error/error.component';
 import { StartComponent } from './feature/recipe/components/start/start.component';
 import { EditComponent as RecipeEditComponent } from './feature/recipe/components/edit/edit.component';
-import { RecipesResolverService } from './feature/recipe/services/recipes-resolver.service';
 import { Recipe } from './feature/recipe/models/recipe.model';
 import { DataStoreService } from './share/services/data-store.service';
+import { AuthLandingComponent } from './feature/auth/pages/auth-landing/auth-landing.component';
 
 //probably each data struct service need one for initing pages.
-const recipesResolver: ResolveFn<Recipe[]> = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot
-) => inject(DataStoreService).getRecipes();
+const recipesResolver: ResolveFn<Recipe[]> = () =>
+  inject(DataStoreService).getRecipes();
 
 const routes: Routes = [
   {
@@ -51,6 +49,10 @@ const routes: Routes = [
   {
     path: 'shopping-list',
     component: ShoppingListLandingComponent,
+  },
+  {
+    path: 'auth',
+    component: AuthLandingComponent,
   },
   {
     path: 'error',
