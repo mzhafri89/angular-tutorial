@@ -33,16 +33,16 @@ export class AuthLandingComponent {
 
     const complete = () => {
       this.isLoading = false;
-      this.form.reset();
     };
 
     const error = (error) => {
-      console.error(error);
       this.isLoading = false;
       this.errorMessage = error.message;
     };
 
-    const next = () => this.router.navigate(['/recipes']);
+    const next = () => {
+      this.router.navigate(['/recipes']);
+    };
 
     if (this.isLoginMode) {
       //login

@@ -17,3 +17,5 @@ export class RecipesResolverService implements ResolveData {
     return this.dataStorageService.getRecipes();
   }
 }
+
+//deprecated, use resolver function instead.

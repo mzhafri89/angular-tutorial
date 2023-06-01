@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject, throwError } from 'rxjs';
+import { BehaviorSubject, Subject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import FirebaseUser from 'src/app/core/models/firebase-user.model';
@@ -36,10 +36,13 @@ export interface AuthErrorResponse {
 export class AuthService {
   private readonly FIREBASE_DOMAIN = 'https://identitytoolkit.googleapis.com';
   private readonly FIREBASE_KEY = 'AIzaSyBY84TKpV17rf1xOADKB1TLRggHURlnefE';
-  private authSubject: Subject<FirebaseUser> | undefined;
+  private authSubject: BehaviorSubject<FirebaseUser> | undefined;
 
   constructor(private http: HttpClient) {
-    this.authSubject = new Subject();
+    //using behaviour subject so that when subscribed, the subscriber can immedietly get the
+    // value, normal subject would not work because in order to receive value, the subscriber need to
+    //subscribed before next is called tto receive value.
+    this.authSubject = new BehaviorSubject<FirebaseUser | null>(null);
   }
 
   register(user: User) {
@@ -82,7 +85,7 @@ export class AuthService {
     return catchError((response: AuthErrorResponse) => {
       let message;
 
-      switch (response.error.error.message) {
+      switch (response?.error?.error?.message) {
         case 'EMAIL_EXISTS':
           message = 'Email already exist';
           break;
@@ -91,6 +94,7 @@ export class AuthService {
           message = 'Invalid email or password';
           break;
         default:
+          console.error(response);
           message = 'Unknown error occured';
       }
 

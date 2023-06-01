@@ -6,5 +6,6 @@ import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [AuthLandingComponent],
   imports: [CommonModule, FormsModule],
+  exports: [AuthLandingComponent],
 })
 export class AuthModule {}
