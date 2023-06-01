@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
@@ -38,7 +39,7 @@ export class AuthService {
   private readonly FIREBASE_KEY = 'AIzaSyBY84TKpV17rf1xOADKB1TLRggHURlnefE';
   private authSubject: BehaviorSubject<FirebaseUser> | undefined;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     //using behaviour subject so that when subscribed, the subscriber can immedietly get the
     // value, normal subject would not work because in order to receive value, the subscriber need to
     //subscribed before next is called tto receive value.
@@ -75,6 +76,13 @@ export class AuthService {
         }
       )
       .pipe(this.handleError(), this.handleValidUser(firebaseUser));
+  }
+
+  logout() {
+    //nullify user and its token
+    this.authSubject.next(null);
+    //navigate to root
+    this.router.navigate(['/']);
   }
 
   private createFirebaseUser(user: User) {
