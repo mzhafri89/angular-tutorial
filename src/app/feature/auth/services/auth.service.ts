@@ -48,6 +48,7 @@ export class AuthService {
   private readonly FIREBASE_KEY = 'AIzaSyBY84TKpV17rf1xOADKB1TLRggHURlnefE';
   private readonly SECURE_TOKEN_DOMAIN = 'https://securetoken.googleapis.com';
   private authSubject: BehaviorSubject<FirebaseUser> | undefined;
+  private timeOutRef: any | undefined | null;
 
   constructor(private http: HttpClient, private router: Router) {
     //using behaviour subject so that when subscribed, the subscriber can immedietly get the
@@ -89,10 +90,22 @@ export class AuthService {
   }
 
   logout() {
+    //clear timers
+    this.clearTimers();
     //nullify user and its token
     this.authSubject.next(null);
+    //clear local storage
+    localStorage.clear();
     //navigate to root
     this.router.navigate(['/']);
+  }
+
+  startForceLogoutTimer(expiryTime: number) {
+    if (this.timeOutRef) {
+      this.clearTimers();
+    }
+
+    this.timeOutRef = setTimeout(() => this.logout(), 1000 * expiryTime);
   }
 
   getAuthSubject() {
@@ -133,6 +146,7 @@ export class AuthService {
 
           this.authSubject.next(firebaseUser);
           this.setRefreshTokenToLocalStorage(firebaseUser.getRefreshToken());
+          this.startForceLogoutTimer(parseInt(expires_in));
         })
       );
   }
@@ -177,6 +191,7 @@ export class AuthService {
 
         this.authSubject.next(firebaseUser);
         this.setRefreshTokenToLocalStorage(firebaseUser.getRefreshToken());
+        this.startForceLogoutTimer(parseInt(expiresIn));
       }
     );
   }
@@ -185,7 +200,20 @@ export class AuthService {
     return new Date(new Date().getTime() + parseInt(expiresIn) * 1000);
   }
 
+  private calculateTokenExpiryTime(expiresIn: string) {
+    return (
+      this.calculateTokenExpiryDate(expiresIn).getTime() - new Date().getTime()
+    );
+  }
+
   private setRefreshTokenToLocalStorage(refreshToken: string) {
     localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
+  }
+
+  private clearTimers() {
+    if (this.timeOutRef) {
+      clearTimeout(this.timeOutRef);
+      this.timeOutRef = null;
+    }
   }
 }
