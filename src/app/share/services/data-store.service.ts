@@ -1,8 +1,6 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError } from 'rxjs';
-import { catchError, exhaustMap, map, take, tap } from 'rxjs/operators';
-import { AuthService } from 'src/app/feature/auth/services/auth.service';
+import { map, tap } from 'rxjs/operators';
 import { Recipe } from 'src/app/feature/recipe/models/recipe.model';
 import { RecipeService } from 'src/app/feature/recipe/services/recipe.service';
 
@@ -10,13 +8,9 @@ import { RecipeService } from 'src/app/feature/recipe/services/recipe.service';
   providedIn: 'root',
 })
 export class DataStoreService {
-  private FIREBASE = 'https://ng-recipe-book-e8f84.firebaseio.com/';
+  private FIREBASE = 'https://ng-recipe-book-e8f84.firebaseio.com';
 
-  constructor(
-    private http: HttpClient,
-    private recipeService: RecipeService,
-    private authService: AuthService
-  ) {}
+  constructor(private http: HttpClient, private recipeService: RecipeService) {}
 
   saveRecipes() {
     this.http

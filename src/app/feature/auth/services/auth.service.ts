@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subject, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, throwError } from 'rxjs';
+import { catchError, take, tap } from 'rxjs/operators';
 
 import FirebaseUser from 'src/app/core/models/firebase-user.model';
 import User from 'src/app/core/models/user.model';
@@ -17,6 +17,15 @@ export interface RegisterResponse {
 
 export interface LoginResponse extends RegisterResponse {
   registered: boolean;
+}
+
+export interface ReloginResponse {
+  id_token: string;
+  refresh_token: string;
+  expires_in: string;
+  project_id: string;
+  token_type: string;
+  user_id: string;
 }
 
 export interface AuthErrorResponse {
@@ -37,6 +46,7 @@ export interface AuthErrorResponse {
 export class AuthService {
   private readonly FIREBASE_DOMAIN = 'https://identitytoolkit.googleapis.com';
   private readonly FIREBASE_KEY = 'AIzaSyBY84TKpV17rf1xOADKB1TLRggHURlnefE';
+  private readonly SECURE_TOKEN_DOMAIN = 'https://securetoken.googleapis.com';
   private authSubject: BehaviorSubject<FirebaseUser> | undefined;
 
   constructor(private http: HttpClient, private router: Router) {
@@ -85,6 +95,48 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
+  getAuthSubject() {
+    return this.authSubject;
+  }
+
+  relogin() {
+    const refreshToken = JSON.parse(localStorage.getItem('refreshToken'));
+
+    if (!refreshToken) {
+      return;
+    }
+
+    return this.http
+      .post<ReloginResponse>(
+        `${this.SECURE_TOKEN_DOMAIN}/v1/token`,
+        {
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken,
+        },
+        {
+          params: {
+            key: this.FIREBASE_KEY,
+          },
+        }
+      )
+      .pipe(
+        take(1),
+        tap(({ id_token, refresh_token, expires_in }) => {
+          const firebaseUser = new FirebaseUser('', '', true);
+
+          firebaseUser.setAccessToken(id_token);
+          firebaseUser.setRefreshToken(refresh_token);
+          firebaseUser.setTokenExpiryDate(
+            this.calculateTokenExpiryDate(expires_in)
+          );
+          firebaseUser.setRegistered(true);
+
+          this.authSubject.next(firebaseUser);
+          this.setRefreshTokenToLocalStorage(firebaseUser.getRefreshToken());
+        })
+      );
+  }
+
   private createFirebaseUser(user: User) {
     return new FirebaseUser(user.getEmail(), user.getPassword(), true);
   }
@@ -120,15 +172,20 @@ export class AuthService {
         firebaseUser.setAccessToken(idToken);
         firebaseUser.setRefreshToken(refreshToken);
         firebaseUser.setTokenExpiryDate(
-          new Date(new Date().getTime() + parseInt(expiresIn) * 1000)
+          this.calculateTokenExpiryDate(expiresIn)
         );
 
         this.authSubject.next(firebaseUser);
+        this.setRefreshTokenToLocalStorage(firebaseUser.getRefreshToken());
       }
     );
   }
 
-  getAuthSubject() {
-    return this.authSubject;
+  private calculateTokenExpiryDate(expiresIn: string) {
+    return new Date(new Date().getTime() + parseInt(expiresIn) * 1000);
+  }
+
+  private setRefreshTokenToLocalStorage(refreshToken: string) {
+    localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
   }
 }
