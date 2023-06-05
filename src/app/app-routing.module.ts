@@ -1,37 +1,44 @@
 import { NgModule, inject } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
+  CanActivateFn,
   ResolveFn,
+  Router,
   RouterModule,
   RouterStateSnapshot,
   Routes,
 } from '@angular/router';
+
 import { LandingComponent as RecipeLandingComponent } from './feature/recipe/pages/landing/landing.component';
 import { LandingComponent as ShoppingListLandingComponent } from './feature/shopping-list/pages/landing/landing.component';
 import { DetailComponent as RecipeDetailComponent } from './feature/recipe/components/detail/detail.component';
 import { ErrorComponent } from './share/pages/error/error.component';
 import { StartComponent } from './feature/recipe/components/start/start.component';
 import { EditComponent as RecipeEditComponent } from './feature/recipe/components/edit/edit.component';
-import { RecipesResolverService } from './feature/recipe/services/recipes-resolver.service';
 import { Recipe } from './feature/recipe/models/recipe.model';
+import { AuthLandingComponent } from './feature/auth/pages/auth-landing/auth-landing.component';
 import { DataStoreService } from './share/services/data-store.service';
+import { AuthGuardService } from './feature/auth/services/auth-guard.service';
+import { AuthService } from './feature/auth/services/auth.service';
 
 //probably each data struct service need one for initing pages.
-const recipesResolver: ResolveFn<Recipe[]> = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot
-) => inject(DataStoreService).getRecipes();
+const recipesResolver: ResolveFn<Recipe[]> = () =>
+  inject(DataStoreService).getRecipes();
+
+const authGuard: CanActivateFn = () =>
+  inject(AuthGuardService).canActivate(inject(AuthService), inject(Router));
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'recipes',
+    redirectTo: 'auth',
     pathMatch: 'full',
     //for root, need to change the path strat to full , since pre fix would match every path.
   },
   {
     path: 'recipes',
     component: RecipeLandingComponent,
+    canActivate: [authGuard],
     resolve: { recipes: recipesResolver },
     children: [
       { path: '', component: StartComponent, pathMatch: 'full' },
@@ -51,6 +58,10 @@ const routes: Routes = [
   {
     path: 'shopping-list',
     component: ShoppingListLandingComponent,
+  },
+  {
+    path: 'auth',
+    component: AuthLandingComponent,
   },
   {
     path: 'error',

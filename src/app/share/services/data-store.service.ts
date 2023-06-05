@@ -8,7 +8,7 @@ import { RecipeService } from 'src/app/feature/recipe/services/recipe.service';
   providedIn: 'root',
 })
 export class DataStoreService {
-  private FIREBASE = 'https://ng-recipe-book-e8f84.firebaseio.com/';
+  private FIREBASE = 'https://ng-recipe-book-e8f84.firebaseio.com';
 
   constructor(private http: HttpClient, private recipeService: RecipeService) {}
 
@@ -32,5 +32,28 @@ export class DataStoreService {
       ),
       tap((response) => this.recipeService.setRecipes(response))
     );
+
+    //alternative to using interceptors
+    // return this.authService.getAuthSubject().pipe(
+    //   take(1), //only receive one event then un sub
+    //   exhaustMap(
+    //     (
+    //       user //convert current sub to other sub
+    //     ) => {
+    //       return this.http.get<Recipe[]>(`${this.FIREBASE}/recipes.json`, {
+    //         params: new HttpParams().set('auth', user.getAccessToken()),
+    //       });
+    //     }
+    //   ),
+    //   map((recipes: Recipe[]) => {
+    //     return recipes.map((recipe) => ({
+    //       ...recipe,
+    //       ingredients: recipe.ingredients ?? [],
+    //     }));
+    //   }),
+    //   tap((response) => {
+    //     this.recipeService.setRecipes(response);
+    //   })
+    // );
   }
 }
