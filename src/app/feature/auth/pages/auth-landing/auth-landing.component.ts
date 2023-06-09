@@ -64,4 +64,8 @@ export class AuthLandingComponent {
   dismissErrorMessage() {
     this.errorMessage = null;
   }
+
+  clearErrorMessage() {
+    this.errorMessage = null;
+  }
 }

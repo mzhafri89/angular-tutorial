@@ -15,8 +15,8 @@ import { AuthInterceptorService } from './feature/auth/services/auth-interceptor
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AuthModule,
     ShareModule,
+    AuthModule,
     RecipeModule,
     ShoppingListModule,
   ],
