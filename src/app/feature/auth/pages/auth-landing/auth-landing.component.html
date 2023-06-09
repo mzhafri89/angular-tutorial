@@ -1,4 +1,4 @@
-<div class="row" *ngIf="errorMessage">
+<!-- <div class="row" *ngIf="errorMessage">
   <div class="col-xs-8 col-xs-offset-2">
     <div class="alert alert-danger">
       <button
@@ -14,7 +14,13 @@
       <p>{{ errorMessage }}</p>
     </div>
   </div>
-</div>
+</div> -->
+
+<app-alert
+  *ngIf="errorMessage"
+  [message]="errorMessage"
+  (close)="clearErrorMessage()"
+></app-alert>
 
 <div class="row">
   <div class="col-xs-8 col-xs-offset-2">
