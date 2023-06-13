@@ -4,7 +4,7 @@ import { ActivatedRoute, Data, Params, Router } from '@angular/router';
 
 import { RecipeService } from '../../services/recipe.service';
 import { Recipe } from '../../models/recipe.model';
-import { Ingredient } from 'src/app/core/models/ingredient.model';
+import { Ingredient } from 'src/app/share/models/ingredient.model';
 
 @Component({
   selector: 'app-edit',

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Ingredient } from 'src/app/core/models/ingredient.model';
+import { Ingredient } from 'src/app/share/models/ingredient.model';
+
 @Injectable({
   providedIn: 'root',
 })

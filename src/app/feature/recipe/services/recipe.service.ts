@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Recipe } from '../models/recipe.model';
-import { Ingredient } from 'src/app/core/models/ingredient.model';
+import { Ingredient } from 'src/app/share/models/ingredient.model';
 import { ShoppingListService } from '../../shopping-list/services/shopping-list.service';
 
 //update the providedIn value if this module is later lazy loaded

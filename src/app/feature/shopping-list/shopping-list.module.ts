@@ -1,12 +1,23 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
 import { EditComponent } from './components/edit/edit.component';
 import { LandingComponent } from './pages/landing/landing.component';
-import { FormsModule } from '@angular/forms';
+import { ShareModule } from 'src/app/share/share.module';
 
 @NgModule({
   declarations: [EditComponent, LandingComponent],
-  imports: [CommonModule, FormsModule],
-  exports: [LandingComponent],
+  imports: [
+    FormsModule,
+    ShareModule,
+    RouterModule.forChild([
+      {
+        path: '',
+        component: LandingComponent,
+      },
+    ]),
+  ],
+  exports: [],
 })
 export class ShoppingListModule {}
