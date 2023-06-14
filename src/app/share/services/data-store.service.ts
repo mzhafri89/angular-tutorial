@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { map, tap } from 'rxjs/operators';
 import { Recipe } from 'src/app/feature/recipe/models/recipe.model';
 import { RecipeService } from 'src/app/feature/recipe/services/recipe.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataStoreService {
-  private FIREBASE = 'https://ng-recipe-book-e8f84.firebaseio.com';
+  private FIREBASE = environment.FIREBASE_DB;
 
   constructor(private http: HttpClient, private recipeService: RecipeService) {}
 

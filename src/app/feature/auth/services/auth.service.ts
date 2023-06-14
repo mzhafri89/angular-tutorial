@@ -6,6 +6,7 @@ import { catchError, take, tap } from 'rxjs/operators';
 
 import FirebaseUser from 'src/app/core/models/firebase-user.model';
 import User from 'src/app/core/models/user.model';
+import { environment } from 'src/environments/environment';
 
 export interface RegisterResponse {
   idToken: string;
@@ -44,9 +45,9 @@ export interface AuthErrorResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly FIREBASE_DOMAIN = 'https://identitytoolkit.googleapis.com';
-  private readonly FIREBASE_KEY = 'AIzaSyBY84TKpV17rf1xOADKB1TLRggHURlnefE';
-  private readonly SECURE_TOKEN_DOMAIN = 'https://securetoken.googleapis.com';
+  private readonly FIREBASE_DOMAIN = environment.FIREBASE_DOMAIN;
+  private readonly FIREBASE_KEY = environment.FIREBASE_KEY;
+  private readonly SECURE_TOKEN_DOMAIN = environment.SECURE_TOKEN_DOMAIN;
   private authSubject: BehaviorSubject<FirebaseUser> | undefined;
   private timeOutRef: any | undefined | null;
 
