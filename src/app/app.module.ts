@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -10,6 +10,7 @@ import { AuthModule } from './feature/auth/auth.module';
 import { AuthInterceptorService } from './feature/auth/services/auth-interceptor.service';
 import { CoreModule } from './core/core.module';
 import { RouterModule } from '@angular/router';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 // ! Module is isolated from each other module by default
 @NgModule({
@@ -25,7 +26,13 @@ import { RouterModule } from '@angular/router';
     //ShoppingListModule, // * lazy loaded
     // ! this needs to be loaded last when there's a wildcard path + child router module
     CoreModule,
-    RouterModule, // * still needed due tue <router-outlet> component
+    RouterModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }), // * still needed due tue <router-outlet> component
   ],
   providers: [
     // * aray of service that this module need
