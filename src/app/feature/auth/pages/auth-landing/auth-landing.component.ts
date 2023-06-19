@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 
 import User from 'src/app/core/models/user.model';
 import { AuthService } from '../../services/auth.service';
+import { Store } from '@ngrx/store';
+import FirebaseUser from 'src/app/core/models/firebase-user.model';
+import { register } from '../../store/auth.actions';
 
 @Component({
   selector: 'app-auth-landing',
@@ -16,7 +19,11 @@ export class AuthLandingComponent {
   isLoading: boolean = false;
   errorMessage: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private store: Store<{ auth: FirebaseUser }>
+  ) {}
 
   toggleLoginMode() {
     this.isLoginMode = !this.isLoginMode;
@@ -53,11 +60,12 @@ export class AuthLandingComponent {
       });
     } else {
       //register
-      this.authService.register(user).subscribe({
-        next,
-        error,
-        complete,
-      });
+      // this.authService.register(user).subscribe({
+      //   next,
+      //   error,
+      //   complete,
+      // });
+      this.store.dispatch(register({ payload: user }));
     }
   }
 

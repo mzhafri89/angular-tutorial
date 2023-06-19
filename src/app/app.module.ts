@@ -4,13 +4,12 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { ShareModule } from './share/share.module';
-import { RecipeModule } from './feature/recipe/recipe.module';
-import { ShoppingListModule } from './feature/shopping-list/shopping-list.module';
-import { AuthModule } from './feature/auth/auth.module';
 import { AuthInterceptorService } from './feature/auth/services/auth-interceptor.service';
 import { CoreModule } from './core/core.module';
 import { RouterModule } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 // ! Module is isolated from each other module by default
 @NgModule({
@@ -31,8 +30,10 @@ import { ServiceWorkerModule } from '@angular/service-worker';
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    }), // * still needed due tue <router-outlet> component
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
+    StoreModule.forRoot({}, {}),
+    EffectsModule.forRoot([]), // * still needed due tue <router-outlet> component
   ],
   providers: [
     // * aray of service that this module need

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, take, tap } from 'rxjs/operators';
 
@@ -51,7 +52,11 @@ export class AuthService {
   private authSubject: BehaviorSubject<FirebaseUser> | undefined;
   private timeOutRef: any | undefined | null;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    store: Store<{ auth }>
+  ) {
     //using behaviour subject so that when subscribed, the subscriber can immedietly get the
     // value, normal subject would not work because in order to receive value, the subscriber need to
     //subscribed before next is called tto receive value.
@@ -61,17 +66,16 @@ export class AuthService {
   register(user: User) {
     const firebaseUser = this.createFirebaseUser(user);
 
-    return this.http
-      .post<RegisterResponse>(
-        `${this.FIREBASE_DOMAIN}/v1/accounts:signUp`,
-        firebaseUser,
-        {
-          params: {
-            key: this.FIREBASE_KEY,
-          },
-        }
-      )
-      .pipe(this.handleError(), this.handleValidUser(firebaseUser));
+    return this.http.post<RegisterResponse>(
+      `${this.FIREBASE_DOMAIN}/v1/accounts:signUp`,
+      firebaseUser,
+      {
+        params: {
+          key: this.FIREBASE_KEY,
+        },
+      }
+    );
+    // .pipe(this.handleError(), this.handleValidUser(firebaseUser));
   }
 
   login(user: User) {
@@ -197,7 +201,7 @@ export class AuthService {
     );
   }
 
-  private calculateTokenExpiryDate(expiresIn: string) {
+  calculateTokenExpiryDate(expiresIn: string) {
     return new Date(new Date().getTime() + parseInt(expiresIn) * 1000);
   }
 
